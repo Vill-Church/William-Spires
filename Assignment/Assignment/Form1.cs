@@ -99,6 +99,7 @@ namespace Assignment
                 MrWritey.WriteLine(EmployeeChange.ToString());
             }
             MrWritey.Close();
+            MessageBox.Show("Done something");
         }
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
