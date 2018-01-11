@@ -10,10 +10,10 @@ namespace Assignment
     {
         private int id;
         private String firstName, lastName, emailAddress, PhoneNumber, Type;
-        private DateTime JoinDate, DateOfBirth;
+        private String JoinDate, DateOfBirth;
         private Byte Age;
 
-        public Employee(int id, String first, String last, DateTime Join, DateTime DOB, Byte age, String phone, String email, String type)
+        public Employee(int id, String first, String last, String Join, String DOB, Byte age, String phone, String email, String type)
         {
             SetId(id);
             SetFirstName(first);
@@ -74,19 +74,19 @@ namespace Assignment
         {
             return Type;
         }
-        public void SetJoinDate(DateTime join)
+        public void SetJoinDate(String join)
         {
             JoinDate = join;
         }
-        public DateTime GetJoinDate()
+        public String GetJoinDate()
         {
             return JoinDate;
         }
-        public void SetDateOfBirth(DateTime DOB)
+        public void SetDateOfBirth(String DOB)
         {
             DateOfBirth = DOB;
         }
-        public DateTime GetDateOfBirth()
+        public String GetDateOfBirth()
         {
             return DateOfBirth;
         }

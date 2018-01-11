@@ -12,6 +12,7 @@ namespace Assignment
 {
     public partial class Form1 : Form
     {
+        private Company company = new Company();
         private Validator Validation = new Validator();
         public Form1()
         {
@@ -20,7 +21,6 @@ namespace Assignment
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Company company = new Company();
             company.SetListOfEmployees();
             List<String> staff = company.GetListOfEmployees();
             String[] Columns = staff.ElementAt(0).Split(',').ToArray();
@@ -50,14 +50,36 @@ namespace Assignment
         {
             Validation.SetTemp(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
         }
-
+        /*
+            StringBuilder employeeChange = new StringBuilder();
+            employeeChange.Append(id);
+            employeeChange.Append(",");
+            employeeChange.Append(firstName);
+            employeeChange.Append(",");
+            employeeChange.Append(lastName);
+            employeeChange.Append(",");
+            employeeChange.Append(JoinDate.ToString());
+            employeeChange.Append(",");
+            employeeChange.Append(DateOfBirth.ToString());
+            employeeChange.Append(",");
+            employeeChange.Append(Age.ToString());
+            employeeChange.Append(",");
+            employeeChange.Append(PhoneNumber);
+            employeeChange.Append(",");
+            employeeChange.Append(emailAddress);
+            employeeChange.Append(",");
+            employeeChange.Append(Type);
+            put in a Write to csv function
+         */
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            List<Employee> employees = company.GetEmployees();
             if(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() != Validation.GetTemp())
             {
                 //value has changed
                 int columnChanged = Convert.ToInt32(dataGridView1.Rows[e.ColumnIndex].Index);
-                int rowChanged = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+                //int rowChanged = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+                int changed = Convert.ToInt32(dataGridView1.Rows[e.RowIndex]);
                 String value = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 if (value == Validation.GetTemp())
                 {
@@ -72,7 +94,7 @@ namespace Assignment
                         if (NameValidation.CheckName(value) == true)
                         {
                             // update value
-                            
+                            employees[changed].SetFirstName(value);                                                      
                         }
                     }
                     else if (columnChanged == 3)
