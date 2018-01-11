@@ -15,6 +15,7 @@ namespace Assignment
     {
         private Company company = new Company();
         private Validator Validation = new Validator();
+        private DataTable dt;
         public Form1()
         {
             InitializeComponent();
@@ -26,8 +27,7 @@ namespace Assignment
             List<String> staff = company.GetListOfEmployees();
             String[] Columns = staff.ElementAt(0).Split(',').ToArray();
             staff.RemoveAt(0); // get rid of column headers
-            DataTable dt = new DataTable();
-            //dt.Columns.Add("column anme");
+            dt = new DataTable();
             for(int i =0; i < Columns.Length; i++)
             {
                 dt.Columns.Add(Columns[i]);
@@ -51,27 +51,6 @@ namespace Assignment
         {
             Validation.SetTemp(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
         }
-        /*
-            StringBuilder employeeChange = new StringBuilder();
-            employeeChange.Append(id);
-            employeeChange.Append(",");
-            employeeChange.Append(firstName);
-            employeeChange.Append(",");
-            employeeChange.Append(lastName);
-            employeeChange.Append(",");
-            employeeChange.Append(JoinDate.ToString());
-            employeeChange.Append(",");
-            employeeChange.Append(DateOfBirth.ToString());
-            employeeChange.Append(",");
-            employeeChange.Append(Age.ToString());
-            employeeChange.Append(",");
-            employeeChange.Append(PhoneNumber);
-            employeeChange.Append(",");
-            employeeChange.Append(emailAddress);
-            employeeChange.Append(",");
-            employeeChange.Append(Type);
-            put in a Write to csv function
-         */
          private void WriteToCsv()
         {
             List<Employee> employees = company.GetEmployees();
@@ -108,9 +87,8 @@ namespace Assignment
             {
                 //value has changed
                 int columnChanged = Convert.ToInt32(dataGridView1.Rows[e.ColumnIndex].Index);
-                //int rowChanged = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
                 int changed = Convert.ToInt32(dataGridView1.Rows[e.RowIndex]);
-                String value = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                string value = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 if (value == Validation.GetTemp())
                 {
                     // didnt change
@@ -125,7 +103,13 @@ namespace Assignment
                         if (NameValidation.CheckName(value) == true)
                         {
                             // update value
-                            employees[changed].SetFirstName(value);                                                      
+                            if (columnChanged == 1)
+                            {
+                                employees[changed].SetFirstName(value);
+                            } else
+                            {
+                                employees[changed].SetLastName(value);
+                            }
                         }
                     }
                     else if (columnChanged == 3)
@@ -143,6 +127,12 @@ namespace Assignment
                     else if (columnChanged == 7)
                     {
                         // email validator
+                        EmailValidator emailValid = new EmailValidator(Validation.GetTemp());
+                        if (emailValid.CheckEmail() == true)
+                        {
+                            // valid email
+                            employees[changed].SetEmailAddress(value);
+                        }
                     }
                     else if (columnChanged == 8)
                     {

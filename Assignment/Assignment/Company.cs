@@ -46,26 +46,40 @@ namespace Assignment
         {
             List<String> Contents = new List<String>();
             Stream FilePath;
-            OpenFileDialog openFile = new OpenFileDialog
+            bool isEmpty = true;
+            while (isEmpty == true)
             {
-                Title = "Select Members CSV file",
-                Filter = "CSV Files|*.csv",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-            };
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                try
+                OpenFileDialog openFile = new OpenFileDialog
                 {
-                    if((FilePath = openFile.OpenFile()) != null)
-                    { 
-                        Contents = File.ReadAllLines(openFile.FileName).ToList();
+                    Title = "Select Members CSV file",
+                    Filter = "CSV Files|*.csv",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                };
+                if (openFile.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        if ((FilePath = openFile.OpenFile()) != null)
+                        {
+                            if (new FileInfo(openFile.FileName).Length == 0)
+                            {
+                                isEmpty = true;// Empty
+                                MessageBox.Show("This file is empty");
+                            }
+                            else
+                            {
+                                isEmpty = false;
+                                SetFilePath(openFile.FileName);
+                                Contents = File.ReadAllLines(openFile.FileName).ToList(); // Read 
+                            }
+                        }
                     }
-                } catch (Exception ex)
-                {
-                    MessageBox.Show("Could not read selected file: " + ex.Message);
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Could not read selected file: " + ex.Message);
+                    }
                 }
             }
-           
             return Contents;
         }
     }
