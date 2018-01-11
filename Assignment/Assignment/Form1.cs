@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Assignment
             company.SetListOfEmployees();
             List<String> staff = company.GetListOfEmployees();
             String[] Columns = staff.ElementAt(0).Split(',').ToArray();
-            staff.RemoveAt(0);
+            staff.RemoveAt(0); // get rid of column headers
             DataTable dt = new DataTable();
             //dt.Columns.Add("column anme");
             for(int i =0; i < Columns.Length; i++)
@@ -71,6 +72,34 @@ namespace Assignment
             employeeChange.Append(Type);
             put in a Write to csv function
          */
+         private void WriteToCsv()
+        {
+            List<Employee> employees = company.GetEmployees();
+            StreamWriter MrWritey = new StreamWriter("test.csv");
+            for (int i = 0; i < employees.Count(); i++)
+            {
+                StringBuilder EmployeeChange = new StringBuilder();
+                EmployeeChange.Append(employees.ElementAt(i).GetId());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetFirstName());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetLastName());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetJoinDate());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetDateOfBirth());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetAge());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetPhoneNumber());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).GetEmailAddress());
+                EmployeeChange.Append(',');
+                EmployeeChange.Append(employees.ElementAt(i).Gettype());
+                MrWritey.WriteLine(EmployeeChange.ToString());
+            }
+            MrWritey.Close();
+        }
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             List<Employee> employees = company.GetEmployees();
@@ -84,6 +113,7 @@ namespace Assignment
                 if (value == Validation.GetTemp())
                 {
                     // didnt change
+
                 }
                 else // determine validator needed
                 {
@@ -119,6 +149,11 @@ namespace Assignment
                     }
                 }
             }
+        }
+
+        private void testWriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WriteToCsv();
         }
     }
 }

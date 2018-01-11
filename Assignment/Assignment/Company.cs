@@ -46,11 +46,13 @@ namespace Assignment
         {
             List<String> Contents = new List<String>();
             Stream FilePath;
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Title = "Select Members CSV file";
-            openFile.Filter = "CSV Files|*.csv";
-            openFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            if(openFile.ShowDialog() == DialogResult.OK)
+            OpenFileDialog openFile = new OpenFileDialog
+            {
+                Title = "Select Members CSV file",
+                Filter = "CSV Files|*.csv",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (openFile.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
