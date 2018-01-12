@@ -39,14 +39,15 @@
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 52);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 49);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(779, 570);
+            this.dataGridView1.Size = new System.Drawing.Size(779, 573);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             // 
             // menuStrip1
             // 
@@ -55,14 +56,14 @@
             this.testWriteToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(779, 52);
+            this.menuStrip1.Size = new System.Drawing.Size(779, 49);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // testWriteToolStripMenuItem
             // 
             this.testWriteToolStripMenuItem.Name = "testWriteToolStripMenuItem";
-            this.testWriteToolStripMenuItem.Size = new System.Drawing.Size(161, 48);
+            this.testWriteToolStripMenuItem.Size = new System.Drawing.Size(161, 45);
             this.testWriteToolStripMenuItem.Text = "Test Write";
             this.testWriteToolStripMenuItem.Click += new System.EventHandler(this.testWriteToolStripMenuItem_Click);
             // 

@@ -16,6 +16,8 @@ namespace Assignment
         private Company company = new Company();
         private Validator Validation = new Validator();
         private DataTable dt;
+        private List<Employee> Allemployees;
+        private bool dataAdded = false;
         public Form1()
         {
             InitializeComponent();
@@ -41,6 +43,8 @@ namespace Assignment
             dataGridView1.ReadOnly = false;
             dataGridView1.Columns[0].ReadOnly = true;
             dataGridView1.Columns[4].ReadOnly = true;
+            Allemployees = company.GetEmployees();
+            dataAdded = true;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -77,8 +81,9 @@ namespace Assignment
                 EmployeeChange.Append(employees.ElementAt(i).Gettype());
                 MrWritey.WriteLine(EmployeeChange.ToString());
             }
-            MrWritey.Close();
+           MrWritey.Close();
             MessageBox.Show("Done something");
+            //File.WriteAllLines("testing.csv", company.GetListOfEmployees());
         }
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -145,6 +150,31 @@ namespace Assignment
         private void testWriteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WriteToCsv();
+        }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            if (dataAdded == false)
+            {
+
+            }
+            else
+            {
+                int id = (Convert.ToInt32((dataGridView1.Rows[e.RowIndex])) + 1); // increment id
+                bool isValid = true;
+                string firstName = (dataGridView1.Rows[e.RowIndex].Cells[1]).ToString(), lastName = (dataGridView1.Rows[e.RowIndex].Cells[2]).ToString(), joinDate = (dataGridView1.Rows[e.RowIndex].Cells[3]).ToString(), dob = (dataGridView1.Rows[e.RowIndex].Cells[4]).ToString(), phoneNumber = (dataGridView1.Rows[e.RowIndex].Cells[6]).ToString(), emailAddress = (dataGridView1.Rows[e.RowIndex].Cells[7]).ToString(), ttype = (dataGridView1.Rows[e.RowIndex].Cells[8]).ToString();
+                byte eAge = Convert.ToByte(dataGridView1.Rows[e.RowIndex].Cells[5]);
+                if (isValid == true)
+                {
+                    Employee newEmployee = new Employee(id, firstName, lastName, joinDate, dob, eAge, phoneNumber, emailAddress, ttype);
+                    Allemployees.Add(newEmployee);
+                    MessageBox.Show("Done");
+                }
+                else
+                {
+
+                }
+            }
         }
     }
 }
