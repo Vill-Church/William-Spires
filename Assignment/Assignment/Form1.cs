@@ -33,7 +33,7 @@ namespace Assignment
             {
                 dt.Columns.Add(Columns[i]);
             }
-            List<string[]> row = staff.Select(x => x.Split(',')).ToList();
+            List<string[]> row = staff.Select(x => x.Split(',')).ToList(); // makes x an array of strings by splitting each line from the csv by commas.
             row.ForEach(x =>
             {
                 dt.Rows.Add(x);
@@ -42,7 +42,7 @@ namespace Assignment
             dataGridView1.ReadOnly = false;
             dataGridView1.Columns[0].ReadOnly = true; // disable id edit 
             dataGridView1.Columns[5].ReadOnly = true; // disable age edit, age will be determined from DOB
-            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToAddRows = false; // stop users from adding rows so they have to use the employee adder
             Allemployees = new List<Employee>();
             Allemployees = company.GetEmployees();
         }
@@ -97,11 +97,6 @@ namespace Assignment
                 }
             }
             return Contents;
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
