@@ -110,27 +110,35 @@ namespace Assignment
          private void WriteToCsv()
         {
             StreamWriter MrWritey = new StreamWriter("test.csv");
+            StringBuilder row = new StringBuilder();
+            for (int i=0; i< dataGridView1.ColumnCount; i++)
+            { 
+                row.Append(dataGridView1.Columns[i]);
+                row.Append(',');
+            }
+            MrWritey.WriteLine(row.ToString());
+            row.Clear();
             for (int i = 0; i < Allemployees.Count(); i++)
             {
-                StringBuilder EmployeeChange = new StringBuilder();
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetId());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetFirstName());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetLastName());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetJoinDate());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetDateOfBirth());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetAge());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetPhoneNumber());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).GetEmailAddress());
-                EmployeeChange.Append(',');
-                EmployeeChange.Append(Allemployees.ElementAt(i).Gettype());
-                MrWritey.WriteLine(EmployeeChange.ToString());
+                row.Append(Allemployees.ElementAt(i).GetId());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetFirstName());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetLastName());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetJoinDate());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetDateOfBirth());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetAge());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetPhoneNumber());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).GetEmailAddress());
+                row.Append(',');
+                row.Append(Allemployees.ElementAt(i).Gettype());
+                MrWritey.WriteLine(row.ToString());
+                row.Clear();
             }
            MrWritey.Close();
             MessageBox.Show("Done something");
