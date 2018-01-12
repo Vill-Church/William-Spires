@@ -17,7 +17,6 @@ namespace Assignment
         private Validator Validation = new Validator();
         private DataTable dt;
         private List<Employee> Allemployees;
-        private bool dataAdded = false;
         public Form1()
         {
             InitializeComponent();
@@ -25,8 +24,8 @@ namespace Assignment
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            company.SetListOfEmployees();
-            List<String> staff = company.GetListOfEmployees();
+            List<String> staff = ReadCsv();
+            company.SetListOfEmployees(CreateEmployeeList(staff));
             String[] Columns = staff.ElementAt(0).Split(',').ToArray();
             staff.RemoveAt(0); // get rid of column headers
             dt = new DataTable();
@@ -41,10 +40,63 @@ namespace Assignment
             });
             dataGridView1.DataSource = dt;
             dataGridView1.ReadOnly = false;
-            dataGridView1.Columns[0].ReadOnly = true;
-            dataGridView1.Columns[4].ReadOnly = true;
+            dataGridView1.Columns[0].ReadOnly = true; // disable id edit 
+            dataGridView1.Columns[5].ReadOnly = true; // disable age edit, age will be determined from DOB
+            dataGridView1.AllowUserToAddRows = false;
+            Allemployees = new List<Employee>();
             Allemployees = company.GetEmployees();
-            dataAdded = true;
+        }
+
+        private List<Employee> CreateEmployeeList(List<string> ListOfEmployees)
+        {
+            List<Employee> employees = new List<Employee>();
+            List<string[]> row = ListOfEmployees.Select(x => x.Split(',')).ToList();
+            for (int i = 1; i < ListOfEmployees.Count(); i++) // first line is column headings
+            {
+                Employee employee = new Employee(Convert.ToInt32(row[i][0]), row[i][1], row[i][2], row[i][3], row[i][4], Convert.ToByte(row[i][5]), row[i][6], row[i][7], row[i][8]);
+                employees.Add(employee);
+            }
+            return employees;
+        }
+        private List<String> ReadCsv()
+        {
+            List<String> Contents = new List<String>();
+            Stream FilePath;
+            bool isEmpty = true;
+            while (isEmpty == true)
+            {
+                OpenFileDialog openFile = new OpenFileDialog
+                {
+                    Title = "Select Members CSV file",
+                    Filter = "CSV Files|*.csv",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                };
+                if (openFile.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        if ((FilePath = openFile.OpenFile()) != null)
+                        {
+                            if (new FileInfo(openFile.FileName).Length == 0)
+                            {
+                                isEmpty = true;// Empty
+                                MessageBox.Show("This file is empty");
+                            }
+                            else
+                            {
+                                isEmpty = false;
+                                company.SetFilePath(openFile.FileName);
+                                Contents = File.ReadAllLines(openFile.FileName).ToList(); // Read 
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Could not read selected file: " + ex.Message);
+                    }
+                }
+            }
+            return Contents;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -57,28 +109,27 @@ namespace Assignment
         }
          private void WriteToCsv()
         {
-            List<Employee> employees = company.GetEmployees();
             StreamWriter MrWritey = new StreamWriter("test.csv");
-            for (int i = 0; i < employees.Count(); i++)
+            for (int i = 0; i < Allemployees.Count(); i++)
             {
                 StringBuilder EmployeeChange = new StringBuilder();
-                EmployeeChange.Append(employees.ElementAt(i).GetId());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetId());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetFirstName());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetFirstName());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetLastName());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetLastName());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetJoinDate());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetJoinDate());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetDateOfBirth());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetDateOfBirth());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetAge());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetAge());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetPhoneNumber());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetPhoneNumber());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).GetEmailAddress());
+                EmployeeChange.Append(Allemployees.ElementAt(i).GetEmailAddress());
                 EmployeeChange.Append(',');
-                EmployeeChange.Append(employees.ElementAt(i).Gettype());
+                EmployeeChange.Append(Allemployees.ElementAt(i).Gettype());
                 MrWritey.WriteLine(EmployeeChange.ToString());
             }
            MrWritey.Close();
@@ -150,31 +201,6 @@ namespace Assignment
         private void testWriteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WriteToCsv();
-        }
-
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            if (dataAdded == false)
-            {
-
-            }
-            else
-            {
-                int id = (Convert.ToInt32((dataGridView1.Rows[e.RowIndex])) + 1); // increment id
-                bool isValid = true;
-                string firstName = (dataGridView1.Rows[e.RowIndex].Cells[1]).ToString(), lastName = (dataGridView1.Rows[e.RowIndex].Cells[2]).ToString(), joinDate = (dataGridView1.Rows[e.RowIndex].Cells[3]).ToString(), dob = (dataGridView1.Rows[e.RowIndex].Cells[4]).ToString(), phoneNumber = (dataGridView1.Rows[e.RowIndex].Cells[6]).ToString(), emailAddress = (dataGridView1.Rows[e.RowIndex].Cells[7]).ToString(), ttype = (dataGridView1.Rows[e.RowIndex].Cells[8]).ToString();
-                byte eAge = Convert.ToByte(dataGridView1.Rows[e.RowIndex].Cells[5]);
-                if (isValid == true)
-                {
-                    Employee newEmployee = new Employee(id, firstName, lastName, joinDate, dob, eAge, phoneNumber, emailAddress, ttype);
-                    Allemployees.Add(newEmployee);
-                    MessageBox.Show("Done");
-                }
-                else
-                {
-
-                }
-            }
         }
     }
 }
