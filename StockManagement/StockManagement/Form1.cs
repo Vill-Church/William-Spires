@@ -15,6 +15,8 @@ namespace StockManagement
     {
         private DataTable dt;
         private List<Products> ProductList = new List<Products>();
+        private string[] Columns;
+        private int selectedRcItem; // gloabal because its used across the context menu functions
        // private int startWidth, startHeight;
         private string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\stock.csv";
         public Form1()
@@ -48,7 +50,7 @@ namespace StockManagement
         }
         private void Populate(List<string> contents)
         {
-            string[] Columns = contents[0].Split(',');
+            Columns = contents[0].Split(',');
             contents.RemoveAt(0); // removing the headers from the list of contents as they are not products
             dt = new DataTable(); 
             for (int i=0; i < Columns.Length; i++)
@@ -99,6 +101,44 @@ namespace StockManagement
                 MessageBox.Show("Could not read selected file. " + ex.Message);
             }
             return contents;
+        }
+
+        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                selectedRcItem = dataGridView1.HitTest(e.X, e.Y).RowIndex;
+                RcContextMenu.Show(dataGridView1, new Point(e.X,e.Y));
+            }
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(selectedRcItem.ToString());
+            Editor edit = new Editor(ProductList.ElementAt(selectedRcItem).GetProductID(),ProductList.ElementAt(selectedRcItem).GetProductName(),ProductList.ElementAt(selectedRcItem).GetQuantity(),ProductList.ElementAt(selectedRcItem).GetPrice());
+            edit.Show();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(selectedRcItem.ToString());
+            ProductList.RemoveAt(selectedRcItem);
+            RefreshDataGrid();
+            MessageBox.Show("Product Deleted.");
+        }
+        private void RefreshDataGrid()
+        { 
+            dt = new DataTable();
+            for(int i=0; i<Columns.Length; i++)
+            {
+                dt.Columns.Add(Columns[i]);
+            }
+            ProductList.ForEach(x =>
+            {
+                string[] arr = { x.GetProductID().ToString(), x.GetProductName(), x.GetQuantity().ToString(), x.GetPrice().ToString() };
+                dt.Rows.Add(arr);
+            });
+            dataGridView1.DataSource = dt;
         }
     }
 }
