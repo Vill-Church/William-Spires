@@ -25,6 +25,29 @@ namespace StockManagement
             InitializeComponent();
         }
 
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void txtProductId_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if(!Char.IsDigit(ch) && !Char.IsControl(ch))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtQuantity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if(!Char.IsDigit(ch) && !Char.IsControl(ch))
+            {
+                e.Handled = true;
+            }
+        }
+
         private void Editor_Load(object sender, EventArgs e)
         {
             txtProductId.Text = ProductID.ToString();

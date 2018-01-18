@@ -45,6 +45,7 @@
             this.txtProductId.Name = "txtProductId";
             this.txtProductId.Size = new System.Drawing.Size(268, 38);
             this.txtProductId.TabIndex = 0;
+            this.txtProductId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtProductId_KeyPress);
             // 
             // LblProductID
             // 
@@ -93,6 +94,7 @@
             this.txtQuantity.Name = "txtQuantity";
             this.txtQuantity.Size = new System.Drawing.Size(268, 38);
             this.txtQuantity.TabIndex = 0;
+            this.txtQuantity.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQuantity_KeyPress);
             // 
             // lblQuantity
             // 
@@ -111,6 +113,7 @@
             this.btnEdit.TabIndex = 2;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // Editor
             // 

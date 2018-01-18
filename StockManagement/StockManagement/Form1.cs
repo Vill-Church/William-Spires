@@ -16,6 +16,7 @@ namespace StockManagement
         private DataTable dt;
         private List<Products> ProductList = new List<Products>();
         private string[] Columns;
+        private Products updated;
         private int selectedRcItem; // gloabal because its used across the context menu functions
        // private int startWidth, startHeight;
         private string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\stock.csv";
@@ -23,20 +24,27 @@ namespace StockManagement
         {
             InitializeComponent();
         }
+        public void SetUpdatedProduct(int id, string name, double price, int quantity)
+        {
 
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
-           /* startWidth = this.Width;
-            startHeight = this.Height;
-            this.WindowState = FormWindowState.Maximized;
-            this.MaximumSize = this.Size;
-            this.MinimumSize = this.Size;
-            double rw = (Width - startWidth) / startWidth;
-            double rh = (Height - startHeight) / startHeight;
-            dataGridView1.Width += Convert.ToInt32(dataGridView1.Width * rw);
-            dataGridView1.Height += Convert.ToInt32(dataGridView1.Height * rh);
-            MessageBox.Show(this.Height.ToString());
-            MessageBox.Show(this.Width.ToString()); */ // dynamic object sizing might be used
+            /* startWidth = this.Width;
+             startHeight = this.Height;
+             this.WindowState = FormWindowState.Maximized;
+             this.MaximumSize = this.Size;
+             this.MinimumSize = this.Size;
+             double rw = (Width - startWidth) / startWidth;
+             double rh = (Height - startHeight) / startHeight;
+             dataGridView1.Width += Convert.ToInt32(dataGridView1.Width * rw);
+             dataGridView1.Height += Convert.ToInt32(dataGridView1.Height * rh);
+             MessageBox.Show(this.Height.ToString());
+             MessageBox.Show(this.Width.ToString()); */ // dynamic object sizing might be used
+            tbPId.Enabled = false;
+            tbName.Enabled = false;
+            tbPrice.Enabled = false;
+            tbQuantity.Enabled = false;
             if (!File.Exists(filePath)){ // check if file exits
                 var file = File.Create(filePath); // if not create the file
                 file.Close();
@@ -81,10 +89,10 @@ namespace StockManagement
             } else // sets the textboxes to the values from the datagrid so they can be edited
             {
                 int row = dataGridView1.Rows[e.RowIndex].Index;
-                tbPId.Text = dataGridView1.Rows[row].Cells[0].Value.ToString();
+                /*tbPId.Text = dataGridView1.Rows[row].Cells[0].Value.ToString();
                 tbName.Text = dataGridView1.Rows[row].Cells[1].Value.ToString();
                 tbPrice.Text = dataGridView1.Rows[row].Cells[2].Value.ToString();
-                tbQuantity.Text = dataGridView1.Rows[row].Cells[3].Value.ToString();
+                tbQuantity.Text = dataGridView1.Rows[row].Cells[3].Value.ToString();*/
             }
             
         }
@@ -115,8 +123,16 @@ namespace StockManagement
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //MessageBox.Show(selectedRcItem.ToString());
-            Editor edit = new Editor(ProductList.ElementAt(selectedRcItem).GetProductID(),ProductList.ElementAt(selectedRcItem).GetProductName(),ProductList.ElementAt(selectedRcItem).GetQuantity(),ProductList.ElementAt(selectedRcItem).GetPrice());
-            edit.Show();
+            //Editor edit = new Editor(ProductList.ElementAt(selectedRcItem).GetProductID(),ProductList.ElementAt(selectedRcItem).GetProductName(),ProductList.ElementAt(selectedRcItem).GetQuantity(),ProductList.ElementAt(selectedRcItem).GetPrice());
+            //edit.Show();
+            tbPId.Enabled = true;
+            tbName.Enabled = true;
+            tbPrice.Enabled = true;
+            tbQuantity.Enabled = true;
+            tbPId.Text = dataGridView1.Rows[selectedRcItem].Cells[0].Value.ToString();
+            tbName.Text = dataGridView1.Rows[selectedRcItem].Cells[1].Value.ToString();
+            tbPrice.Text = dataGridView1.Rows[selectedRcItem].Cells[2].Value.ToString();
+            tbQuantity.Text = dataGridView1.Rows[selectedRcItem].Cells[3].Value.ToString();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -139,6 +155,52 @@ namespace StockManagement
                 dt.Rows.Add(arr);
             });
             dataGridView1.DataSource = dt;
+        }
+        private void WriteToCsv()
+        {
+            List<string> toCsv = new List<string>();
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i<Columns.Length; i++)
+            {
+                sb.Append(Columns[i]);
+                if(i+1 == Columns.Length)
+                {
+
+                }else
+                {
+                    sb.Append(',');
+                }
+                
+            }
+            toCsv.Add(sb.ToString());
+            sb.Clear();
+            foreach(Products p in ProductList)
+            {
+                sb.Append(p.GetProductID());
+                sb.Append(',');
+                sb.Append(p.GetProductName());
+                sb.Append(',');
+                sb.Append(p.GetPrice());
+                sb.Append(',');
+                sb.Append(p.GetQuantity());
+                toCsv.Add(sb.ToString());
+                sb.Clear();
+            }
+            File.WriteAllLines(filePath, toCsv.ToList());
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            WriteToCsv();
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        { 
+            ProductList.ElementAt(selectedRcItem).SetProductId(Convert.ToInt32(tbPId.Text));
+            ProductList.ElementAt(selectedRcItem).SetProductName(tbName.Text);
+            ProductList.ElementAt(selectedRcItem).SetPrice(Convert.ToDouble(tbPrice.Text));
+            ProductList.ElementAt(selectedRcItem).SetQuantity(Convert.ToInt32(tbQuantity.Text));
+            RefreshDataGrid();
+            MessageBox.Show("Done");
         }
     }
 }
