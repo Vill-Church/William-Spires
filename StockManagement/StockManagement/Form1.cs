@@ -46,11 +46,13 @@ namespace StockManagement
             tbPrice.Enabled = false;
             tbQuantity.Enabled = false;
             if (!File.Exists(filePath)){ // check if file exits
-                var file = File.Create(filePath); // if not create the file
-                file.Close();
+                File.WriteAllText(filePath, "Product ID, Product Name, Price, Quantity");// Add headings to the file
+                Columns = new string[] { "Product ID", "Product Name", "Price", "Quantity" }; // set columns
             } else if(new FileInfo(filePath).Length == 0) 
-            { 
+            {
                 // empty file therefore do not populate
+                File.WriteAllText(filePath, "Product ID, Product Name, Price, Quantity");// Add headings to the file
+                Columns = new string[] {"Product ID", "Product Name", "Price", "Quantity"}; // set columns
             } else
             {
                 Populate(ReadCSV()); // file has contents so populate. Calls ReadCSV() to return a list of strings for each line in the file
@@ -106,23 +108,22 @@ namespace StockManagement
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not read selected file. " + ex.Message);
+                MessageBox.Show("Could not read the file. " + ex.Message); // in case the file becomes corrupt to prevent a crash
             }
             return contents;
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if(e.Button == MouseButtons.Right) // only want the menu to appear on right clicks
             {
-                selectedRcItem = dataGridView1.HitTest(e.X, e.Y).RowIndex;
-                RcContextMenu.Show(dataGridView1, new Point(e.X,e.Y));
+                selectedRcItem = dataGridView1.HitTest(e.X, e.Y).RowIndex; // gets the row that was right click in
+                RcContextMenu.Show(dataGridView1, new Point(e.X,e.Y)); // opens up the right click menu
             }
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(selectedRcItem.ToString());
             //Editor edit = new Editor(ProductList.ElementAt(selectedRcItem).GetProductID(),ProductList.ElementAt(selectedRcItem).GetProductName(),ProductList.ElementAt(selectedRcItem).GetQuantity(),ProductList.ElementAt(selectedRcItem).GetPrice());
             //edit.Show();
             tbPId.Enabled = true;
@@ -137,7 +138,6 @@ namespace StockManagement
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(selectedRcItem.ToString());
             ProductList.RemoveAt(selectedRcItem);
             RefreshDataGrid();
             MessageBox.Show("Product Deleted.");
@@ -201,6 +201,24 @@ namespace StockManagement
             ProductList.ElementAt(selectedRcItem).SetQuantity(Convert.ToInt32(tbQuantity.Text));
             RefreshDataGrid();
             MessageBox.Show("Done");
+        }
+
+        private void tbQuantity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if (!Char.IsDigit(ch) && !Char.IsControl(ch))
+            {
+                e.Handled = true;
+            } // Allows only numbers to be entered
+        }
+
+        private void tbPId_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if (!Char.IsDigit(ch) && !Char.IsControl(ch))
+            {
+                e.Handled = true;
+            } // Allows only numbers to be entered
         }
     }
 }

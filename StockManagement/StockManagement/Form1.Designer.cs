@@ -65,6 +65,7 @@
             this.tbPId.Name = "tbPId";
             this.tbPId.Size = new System.Drawing.Size(100, 38);
             this.tbPId.TabIndex = 1;
+            this.tbPId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbPId_KeyPress);
             // 
             // label1
             // 
@@ -122,6 +123,7 @@
             this.tbQuantity.Name = "tbQuantity";
             this.tbQuantity.Size = new System.Drawing.Size(100, 38);
             this.tbQuantity.TabIndex = 8;
+            this.tbQuantity.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbQuantity_KeyPress);
             // 
             // RcContextMenu
             // 
